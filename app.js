@@ -40,6 +40,7 @@ app.use(function(err, req, res, next) {
 
 // Routes
 require('./routes/site').routes(app)
+require('./routes/users').routes(app)
 require('./routes/errors').routes(app)
 
 
