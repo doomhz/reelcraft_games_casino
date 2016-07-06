@@ -1,5 +1,6 @@
 import React from 'react'
 import {Link, IndexLink} from 'react-router'
+import Profile from '../components/Profile'
 
 class Main extends React.Component {
   render(){
@@ -10,9 +11,8 @@ class Main extends React.Component {
             <div className="navbar-header">
               <button type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" className="navbar-toggle collapsed"><span className="sr-only">Toggle navigation</span><span className="icon-bar"></span><span className="icon-bar"></span><span className="icon-bar"></span></button><IndexLink to="/" activeClassName="active" className="navbar-brand">Reelcraft Games Casino</IndexLink>
             </div>
-            <div id="navbar" className="navbar-collapse collapse">
-              <ul className="nav navbar-nav">
-              </ul>
+            <div className="text-right">
+              <Profile />
             </div>
           </div>
         </nav>
