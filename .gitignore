@@ -19,5 +19,6 @@ js.digest
 img.digest
 
 crons/*.js
+config/*.json
 
 *.log
