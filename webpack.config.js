@@ -12,6 +12,7 @@ config = {
     filename: 'index.js'
   },
   devServer: {
+    host: "0.0.0.0",
     inline: true,
     port: 3333
   },
