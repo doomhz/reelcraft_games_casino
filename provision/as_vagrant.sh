@@ -12,11 +12,11 @@ grep -q -F 'cd /vagrant' ~/.bashrc || echo 'cd /vagrant' >> ~/.bashrc
 
 echo -e "\n--- Installing nvm ---\n"
 curl -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
-. ~/.nvm/nvm.sh
+. ~/.nvm/nvm.sh > /dev/null 2>&1
 
 
 echo -e "\n--- Installing node 4 ---\n"
-nvm install 4
+nvm install 4 > /dev/null 2>&1
 nvm use 4
 
 
