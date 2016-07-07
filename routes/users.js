@@ -25,11 +25,16 @@ let setUser = function (res, user = null) {
   return res.cookie("user", JSON.stringify(user), {expires: new Date(Number(new Date()) + 24*60*60*1000), httpOnly: true})
 }
 
-export function routes(app) { 
+export function routes(app) {
   app.post("/user", function (req, res) {
     let user = getUser(req, true)
     setUser(res, user)
     res.json(user)
+    // GLOBAL.db.Player.createPlayer()
+    // .then((player) => {
+    //   console.dir(player)
+    //   res.json(player)
+    // })
   })
 
   app.get("/user", function (req, res) {
