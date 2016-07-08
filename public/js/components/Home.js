@@ -1,21 +1,29 @@
 import React from 'react'
 import {Link} from 'react-router'
-import {gamesList} from '../utils/helpers'
+import {getGamesList} from '../utils/helpers'
 
 class Home extends React.Component {
   constructor(props){
     super(props)
+    this.state = {
+      gamesList: []
+    }
+  }
+  componentDidMount(){
+    getGamesList().then((data)=>
+      this.setState({gamesList: data.data})
+    )
   }
   render(){
     return (
       <div>
         <div className="page-header">
-          <h1>Reelcraft Games Casino</h1>
+          <h1>Provably Fair Casino Games</h1>
         </div>
         <ul>
-        {gamesList.map((game, index) => (
+        {this.state.gamesList.map((game, index) => (
           <li key={game.key}>
-            <Link to={`/${game.key}`}>{game.name}</Link>
+            <Link to={`/play/${game.key}`}>{game.name}</Link>
           </li>
         ))}
         </ul>
