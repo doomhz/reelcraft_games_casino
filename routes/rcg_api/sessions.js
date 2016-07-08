@@ -4,7 +4,7 @@ import request from "request"
 const signHMAC = function (data) {
   let message = ""
   Object.keys(data).sort().forEach((key)=>
-    message += "#{key}=#{data[key]}"
+    message += `${key}=${data[key]}`
   )
   return crypto.createHmac("sha256", config.rcg_api.secret).update(message).digest("hex")
 }
