@@ -21,6 +21,8 @@
     "elemental": "^0.5.14",
     "errorhandler": "latest",
     "express": "latest",
+    "express-mysql-session": "^1.1.1",
+    "express-session": "^1.14.0",
     "fs-extra": "latest",
     "history": "^2.1.1",
     "lodash": "^4.13.1",

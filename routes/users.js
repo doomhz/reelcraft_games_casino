@@ -1,57 +1,56 @@
 import _ from "underscore"
 
-let getUser = function (req, autoCreate = false) {
-  let user = {}
-  try {
-    user = JSON.parse(req.cookies.user)
-  } catch (e) {}
-  if (!user.id && autoCreate) {
-    let key = Date.now()
-    user = {
-      id: `abc-${key}-xyz`,
-      username: `demo-${key}`,
-      wallets: [
-        {currency: "free", balance: 100000000000, selected: true},
-        {currency: "eur", balance: 100000000000, selected: false},
-        {currency: "usd", balance: 100000000000, selected: false}
-      ]
-    }
+let getCurrentPlayer = function (req) {
+  let currency = req.body.currency
+  let sessionPlayer = req.session.player
+
+  if (sessionPlayer) {
+
+    return GLOBAL.db.Player.loadFromString(sessionPlayer)
+    .then( player => {
+      if (player.currency === currency)
+        return player
+      else
+        return GLOBAL.db.Player.createNew(currency)
+        .then ( player => {
+          req.session.player = JSON.stringify(player.dataValues)
+          return player
+        })
+    })
+
+  } else {
+
+    return GLOBAL.db.Player.createNew(currency)
+    .then ( player => {
+      req.session.player = JSON.stringify(player.dataValues)
+      return player
+    })
+
   }
-  return user
 }
 
-let setUser = function (res, user = null) {
-  if (!user) return res.cookie("user", "", {expires: new Date(), httpOnly: true})
-  return res.cookie("user", JSON.stringify(user), {expires: new Date(Number(new Date()) + 24*60*60*1000), httpOnly: true})
-}
 
 export function routes(app) {
   app.post("/user", function (req, res) {
-    let user = getUser(req, true)
-    setUser(res, user)
-    res.json(user)
-    // GLOBAL.db.Player.createPlayer()
-    // .then((player) => {
-    //   console.dir(player)
-    //   res.json(player)
-    // })
+    getCurrentPlayer(req).then(res.json.bind(res))
   })
 
   app.get("/user", function (req, res) {
-    res.json(getUser(req))
+    getCurrentPlayer(req).then(res.json.bind(res))
   })
 
   app.put("/user", function (req, res) {
-    let user = getUser(req)
-    user.wallets.forEach((wallet)=>
-      wallet.selected = wallet.currency === req.body.currency ? true : false
-    )
-    setUser(res, user)
-    res.json(user)
+    getCurrentPlayer(req).then(res.json.bind(res))
   })
 
   app.delete("/user", function (req, res) {
-    setUser(res, null)
-    res.json({})
+    getCurrentPlayer(req)
+    .then( player => {
+      GLOBAL.db.Player.destroy({where: {id: player.id}})
+      .then( affectedRows => {
+        req.session.player = null
+        res.json({affectedRows: affectedRows})
+      })
+    })
   })
 }

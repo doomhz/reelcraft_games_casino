@@ -26,8 +26,6 @@ fs.readdirSync(__dirname).filter(
   file => { let model = sequelize.import(path.join(__dirname, file)); db[model.name] = model; }
 )
 
-db.Player.hasMany(db.Wallet)
-
 exports = module.exports = lodash.extend({
   sequelize: sequelize,
   Sequelize: Sequelize

@@ -5,30 +5,33 @@ module.exports = (sequelize, DataTypes) => {
   let Player = sequelize.define("Player", {
       uid: DataTypes.STRING,
       username: DataTypes.STRING,
-      active_currency: DataTypes.STRING
+      currency: DataTypes.STRING,
+      balance: DataTypes.BIGINT.UNSIGNED
     }, {
       tableName: "players",
 
       classMethods: {
 
-        createPlayer: () => {
+        createNew: (currency = "free") => {
           let key = Date.now()
-          let player = Player.build({
+          return Player.create({
             uid: `abc-${key}-xyz`,
             username: `demo-${key}`,
-            active_currency: "free"
+            currency: currency,
+            balance: 100000000000
           })
-          return player.save()
-          .then((player) => {
-            return GLOBAL.db.Wallet.findOrCreateForPlayer(player.id)
-            .then(() => {
-              return Player.findAll({
-                where: {id: player.id},
-                include: [GLOBAL.db.Wallet]
-              })
-            })
-          })
+        },
+
+        loadFromString: (jsonStr) => {
+          console.log("Player.loadFromString:", jsonStr)
+          let attributes = JSON.parse(jsonStr)
+          let player = Player.build(attributes)
+          return Player.findOne({where: {id: player.id}})
         }
+
+      },
+
+      instanceMethods: {
 
       }
     }

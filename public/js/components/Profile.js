@@ -18,18 +18,13 @@ class Profile extends React.Component {
     )
   }
   getBalance(){
-    let activeWallet = this.getActiveWallet()
-    return activeWallet ? activeWallet.balance : 0
+    return this.state.user.balance
   }
   getCurrency(){
-    let activeWallet = this.getActiveWallet()
-    return activeWallet ? activeWallet.currency : "free"
+    this.state.user.currency
   }
-  getActiveWallet(){
-    return this.getWallets().find((wallet) => wallet.selected === true)
-  }
-  getWallets(){
-    return this.state.user.wallets || []
+  getCurrencies(){
+    return ["free", "eur", "usd"]
   }
   onCreateUserClick(){
     createUser().then((data)=>
@@ -53,8 +48,8 @@ class Profile extends React.Component {
         <div>
           <span className="label label-success">{this.getBalance()}</span>
           <select name="currency" defaultValue={this.getCurrency()} onChange={this.onCurrencyChange.bind(this)}>
-            {this.getWallets().map((wallet, index) => (
-              <option value={wallet.currency} key={wallet.currency}>{wallet.currency.toUpperCase()}</option>
+            {this.getCurrencies().map((currency, index) => (
+              <option value={currency} key={currency}>{currency.toUpperCase()}</option>
             ))}
           </select>
           <button className="btn btn-default" onClick={()=> this.onSignoutClick()}>Sign Out</button>
@@ -68,7 +63,7 @@ class Profile extends React.Component {
         {menu}
       </div>
     )
-  } 
+  }
 }
 
 export default Profile

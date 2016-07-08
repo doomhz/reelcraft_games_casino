@@ -1,6 +1,8 @@
 require('babel-register')
 
 var express           = require('express')
+var session           = require('express-session')
+var MySQLStore        = require('express-mysql-session')(session);
 var bodyParser        = require('body-parser')
 var methodOverride    = require('method-override')
 var cookieParser      = require('cookie-parser')
@@ -12,7 +14,6 @@ var environment       = process.env.NODE_ENV || 'development'
 
 require('date-utils')
 
-
 // Configure globals
 GLOBAL.config = require('./config/app')[environment]
 GLOBAL.db     = require("./models/mysql/index")
@@ -20,6 +21,7 @@ GLOBAL.db     = require("./models/mysql/index")
 // Setup express
 var app = express()
 var cookieParser  = cookieParser(GLOBAL.config.session.cookie_secret)
+var sessionStore = new MySQLStore(GLOBAL.config.mysql)
 app.enable("trust proxy")
 app.disable('x-powered-by')
 app.set('port', process.env.PORT || 7000)
@@ -30,6 +32,15 @@ app.use(bodyParser.urlencoded({extended: true}))
 app.use(bodyParser.json())
 app.use(methodOverride())
 app.use(cookieParser)
+app.use(session({
+  name:              GLOBAL.config.session.session_key,
+  secret:            GLOBAL.config.session.cookie_secret,
+  store:             sessionStore,
+  proxy:             true,
+  cookie:            GLOBAL.config.session.cookie,
+  saveUninitialized: true,
+  resave:            true
+}))
 app.use(express.static(__dirname + '/public', {maxAge: 2592000000})) // 30 days
 app.use(function(err, req, res, next) {
   if (err.status === 400) {
