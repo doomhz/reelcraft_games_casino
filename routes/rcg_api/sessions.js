@@ -1,49 +1,34 @@
-import crypto from "crypto"
-import request from "request"
+import RcgHelper from "../../lib/rcg_helper"
 
-const signHMAC = function (data) {
-  let message = ""
-  Object.keys(data).sort().forEach((key)=>
-    message += `${key}=${data[key]}`
-  )
-  return crypto.createHmac("sha256", config.rcg_api.secret).update(message).digest("hex")
-}
-
-const verifyHMAC = function (signature, data) {
-  let expectedSignature = signHMAC(data)
-  console.log(data)
-  if (signature !== expectedSignature) console.error(`expected signature: ${expectedSignature}, actual: ${signature}`)
-  return expectedSignature === signature
-}
+let rcgHelper = new RcgHelper({config: GLOBAL.config})
 
 export function routes(app) {
   app.post("/rcg_api/create_session", function (req, res) {
     let data = {
-      partner_uid: config.rcg_api.partner_uid,
+      partner_uid: GLOBAL.config.rcg_api.partner_uid,
       player_uid: "123",
       currency: "free"
     }
-    let uri = `${config.rcg_api.endpoint}/create_session`
-    let signature = signHMAC(data)
-    let options = {
-      uri: uri,
-      method: "post",
-      json: data,
-      headers: {
-        'X-Signature': signature
+    rcgHelper.request("create_session", data, function(err, response) {
+      if (err) {
+        console.error(err)
+        return res.status(409).json({error: "Could not open session."})
       }
-    }
-    console.log(options)
-    request(options, function (err, response, body){
-      if (err) return res.status(409).json({error: err})
-      if (!response) return res.status(409).json({error: "Empty response"})
-      if (response.statusCode !== 200) return res.status(409).json({error: `Status code ${response.statusCode} != 200, message: ${response.statusMessage}`})
-      res.json(body)
+      res.json({token: response.data.token})
     })
   })
 
   app.post("/rcg_api/close_session", function (req, res) {
-    // TBD
-    res.json({})
+    let data = {
+      partner_uid: config.rcg_api.partner_uid,
+      token: req.body.token
+    }
+    rcgHelper.request("close_session", data, function(err, response) {
+      if (err) {
+        console.error(err)
+        return res.status(409).json({error: "Could not close session."})
+      }
+      res.json({})
+    })
   })
 }
