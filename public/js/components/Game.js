@@ -18,7 +18,8 @@ class Game extends React.Component {
     })
   }
   componentWillUnmount(){
-    closeSession(this.token).then(()=> this.unloadGame())
+    closeSession(this.token)
+    this.unloadGame()
   }
   loadGame(){
     const script = document.createElement("script")

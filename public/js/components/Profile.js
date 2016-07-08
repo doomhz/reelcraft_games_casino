@@ -4,7 +4,6 @@ import {getUserInfo, createUser, deleteUser, updateUser} from '../utils/helpers'
 class Profile extends React.Component {
   constructor(props){
     super(props)
-    let key = "blah"
     this.state = {
       user: {}
     }
