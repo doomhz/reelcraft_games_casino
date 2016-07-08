@@ -58,6 +58,7 @@ app.use(function(err, req, res, next) {
 require('./routes/site').routes(app)
 require('./routes/users').routes(app)
 require('./routes/rcg_api/sessions').routes(app)
+require('./routes/rcg_api/wallet').routes(app)
 require('./routes/errors').routes(app)
 
 

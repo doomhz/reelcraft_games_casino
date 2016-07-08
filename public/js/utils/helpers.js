@@ -19,3 +19,11 @@ export function updateUser(data){
 export function getGamesList(){
   return axios.get("https://reelcraftgames.com/games/list/all")
 }
+
+export function createSession(){
+  return axios.post("/rcg_api/create_session")
+}
+
+export function closeSession(token){
+  return axios.post("/rcg_api/close_session", {token: token})
+}

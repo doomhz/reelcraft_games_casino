@@ -1,5 +1,3 @@
-# what kind of sorcery is this?
-require("coffee-script").register()
 require('babel-register')
 
 environment   = process.env.NODE_ENV || "development"

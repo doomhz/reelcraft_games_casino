@@ -1,20 +1,24 @@
 import React from 'react'
 import {Link, IndexLink} from 'react-router'
-import {gamesList} from '../utils/helpers'
+import {gamesList, createSession, closeSession} from '../utils/helpers'
 
 class Game extends React.Component {
   constructor(props){
     super(props)
-    this.integrationHost = "https://reelcraftgames.com"
+    this.integrationHost = globalParams.integrationHost
     this.gameName = this.props.params.game
-    this.partnerUid = "766ac70c-0f7a-417d-b9fc-ad769020ca58"
+    this.partnerUid = globalParams.partnerUid
+    this.token = ""
   }
   componentDidMount(){
     this.unloadGame()
-    this.loadGame()
+    createSession().then((data)=> {
+      this.token = data.data.token
+      this.loadGame()
+    })
   }
   componentWillUnmount(){
-    this.unloadGame()
+    closeSession(this.token).then(()=> this.unloadGame())
   }
   loadGame(){
     const script = document.createElement("script")
@@ -36,7 +40,7 @@ class Game extends React.Component {
     }
   }
   getScriptPath(){
-    return `${this.integrationHost}/integration/game.js?game=${this.gameName}&partner_uid=${this.partnerUid}&integration_host=${this.integrationHost}`
+    return `${this.integrationHost}/integration/game.js?game=${this.gameName}&partner_uid=${this.partnerUid}&token=${this.token}&integration_host=${this.integrationHost}`
   }
   render(){
     return (

@@ -27,12 +27,18 @@ module.exports = (sequelize, DataTypes) => {
           let attributes = JSON.parse(jsonStr)
           let player = Player.build(attributes)
           return Player.findOne({where: {id: player.id}})
+        },
+
+        findByUid: (uid) => {
+          return Player.findOne({where: {uid: uid}})
         }
 
       },
 
       instanceMethods: {
-
+        addBalance: function (amount) {
+          return this.increment({balance: amount})
+        }
       }
     }
   )

@@ -43,11 +43,14 @@
   },
   "devDependencies": {
     "webpack": "latest",
-    "webpack-dev-server": "latest"
+    "webpack-dev-server": "latest",
+    "mocha": "latest",
+    "should": "latest"
   },
   "scripts": {
     "webpack": "./node_modules/webpack/bin/webpack",
-    "build": "webpack",
-    "dev": "webpack-dev-server --watch-poll --inline --devtool eval --progress --colors --hot --content-base ./"
+    "build": "webpack --progress",
+    "dev": "webpack-dev-server --watch-poll --inline --devtool eval --progress --colors --hot --content-base ./",
+    "test": "NODE_ENV=test ./node_modules/.bin/mocha --compilers js:babel-core/register"
   }
 }
