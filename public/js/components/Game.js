@@ -8,8 +8,6 @@ class Game extends React.Component {
     this.integrationHost = "https://reelcraftgames.com"
     this.gameName = this.props.params.game
     this.partnerUid = "766ac70c-0f7a-417d-b9fc-ad769020ca58"
-    this.assetsHost = "https://reelcraftgames.com"
-    this.env = "production"
   }
   componentDidMount(){
     this.unloadGame()
