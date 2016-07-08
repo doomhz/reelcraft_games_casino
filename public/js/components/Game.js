@@ -38,7 +38,7 @@ class Game extends React.Component {
     }
   }
   getScriptPath(){
-    return `${this.integrationHost}/integration/game.js?game=${this.gameName}&partner_uid=${this.partnerUid}&integration_host=${this.integrationHost}&assets_host=${this.assetsHost}&env=${this.env}`
+    return `${this.integrationHost}/integration/game.js?game=${this.gameName}&partner_uid=${this.partnerUid}&integration_host=${this.integrationHost}`
   }
   render(){
     return (
