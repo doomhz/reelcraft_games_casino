@@ -17,6 +17,11 @@
         "httpOnly": true,
         "secure": false
       }
+    },
+    "rcg_api": {
+      "partner_uid": "",
+      "secret": "",
+      "endpoint": "https://reelcraftgames.com/integration"
     }
   },
   "test" : {
@@ -37,6 +42,11 @@
         "httpOnly": true,
         "secure": false
       }
+    },
+    "rcg_api": {
+      "partner_uid": "",
+      "secret": "",
+      "endpoint": "https://reelcraftgames.com/integration"
     }
   },
   "production" : {
@@ -57,6 +67,11 @@
         "httpOnly": true,
         "secure": false
       }
+    },
+    "rcg_api": {
+      "partner_uid": "",
+      "secret": "",
+      "endpoint": "https://reelcraftgames.com/integration"
     }
   }
 }

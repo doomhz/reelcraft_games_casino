@@ -8,8 +8,6 @@ class Game extends React.Component {
     this.integrationHost = "https://reelcraftgames.com"
     this.gameName = this.props.params.game
     this.partnerUid = "766ac70c-0f7a-417d-b9fc-ad769020ca58"
-    this.assetsHost = "https://reelcraftgames.com"
-    this.env = "production"
   }
   componentDidMount(){
     this.unloadGame()
@@ -38,7 +36,7 @@ class Game extends React.Component {
     }
   }
   getScriptPath(){
-    return `${this.integrationHost}/integration/game.js?game=${this.gameName}&partner_uid=${this.partnerUid}&integration_host=${this.integrationHost}&assets_host=${this.assetsHost}&env=${this.env}`
+    return `${this.integrationHost}/integration/game.js?game=${this.gameName}&partner_uid=${this.partnerUid}&integration_host=${this.integrationHost}`
   }
   render(){
     return (
