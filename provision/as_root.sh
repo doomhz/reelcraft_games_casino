@@ -8,9 +8,10 @@ echo -e "\n--- Updating package list ---\n"
 apt-get -qq update
 
 
-echo -e "\n--- Installing mysql-server ---\n"
+echo -e "\n--- Installing mysql-server and build-essential ---\n"
 export DEBIAN_FRONTEND="noninteractive"
 apt-get -qq install -y mysql-server > /dev/null 2>&1
+apt-get -qq install -y build-essential > /dev/null 2>&1
 
 
 echo -e "\n--- Clean up packages ---\n"

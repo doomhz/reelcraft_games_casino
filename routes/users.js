@@ -1,56 +1,63 @@
 import _ from "underscore"
 
-let getCurrentPlayer = function (req) {
-  let currency = req.body.currency
-  let sessionPlayer = req.session.player
-
-  if (sessionPlayer) {
-
-    return GLOBAL.db.Player.loadFromString(sessionPlayer)
-    .then( player => {
-      if (player.currency === currency)
-        return player
-      else
-        return GLOBAL.db.Player.createNew(currency)
-        .then ( player => {
-          req.session.player = JSON.stringify(player.dataValues)
-          return player
-        })
-    })
-
-  } else {
-
-    return GLOBAL.db.Player.createNew(currency)
-    .then ( player => {
-      req.session.player = JSON.stringify(player.dataValues)
-      return player
-    })
-
-  }
+let createNewPlayer = function (req) {
+  return GLOBAL.db.Player.createNew()
+  .then( player => {
+    req.session.player = JSON.stringify(player.dataValues)
+    return player
+  })
 }
 
+let getCurrentPlayer = function (req) {
+  return GLOBAL.db.Player.loadFromString(req.session.player)
+}
+
+let changePlayerCurrency = function (req) {
+  let currency = req.body.currency || "free"
+  return GLOBAL.db.Player.loadFromString(req.session.player)
+  .then( player => {
+    let options = {
+      where: {
+        uid: player.uid,
+        username: player.username,
+        currency: currency
+      },
+      defaults: {
+        balance: 100000000000
+      }
+    }
+    return GLOBAL.db.Player.findOrCreate(options)
+  }).spread( (player, created) => {
+    req.session.player = JSON.stringify(player.dataValues)
+    return player
+  })
+}
+
+let deleteCurrentPlayer = function (req) {
+  return GLOBAL.db.Player.loadFromString(req.session.player)
+  .then( player => {
+    req.session.player = null
+    return GLOBAL.db.Player.destroy({where: {uid: player.uid}})
+  })
+}
 
 export function routes(app) {
   app.post("/user", function (req, res) {
-    getCurrentPlayer(req).then(res.json.bind(res))
+    createNewPlayer(req).then(res.json.bind(res))
   })
 
   app.get("/user", function (req, res) {
+    if (!req.session.player) return res.json({})
     getCurrentPlayer(req).then(res.json.bind(res))
   })
 
   app.put("/user", function (req, res) {
-    getCurrentPlayer(req).then(res.json.bind(res))
+    if (!req.session.player) return res.json({})
+    changePlayerCurrency(req).then(res.json.bind(res))
   })
 
   app.delete("/user", function (req, res) {
-    getCurrentPlayer(req)
-    .then( player => {
-      GLOBAL.db.Player.destroy({where: {id: player.id}})
-      .then( affectedRows => {
-        req.session.player = null
-        res.json({affectedRows: affectedRows})
-      })
-    })
+    if (!req.session.player) return res.json({})
+    deleteCurrentPlayer(req).then(res.json.bind(res))
   })
 }
