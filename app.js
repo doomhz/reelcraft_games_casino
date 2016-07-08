@@ -8,13 +8,18 @@ var compression       = require('compression')
 var errorhandler      = require('errorhandler')
 var http              = require('http')
 var environment       = process.env.NODE_ENV || 'development'
-var config            = require('./config/app')[environment]
+
 
 require('date-utils')
 
+
+// Configure globals
+GLOBAL.config = require('./config/app')[environment]
+GLOBAL.db     = require("./models/mysql/index")
+
 // Setup express
 var app = express()
-var cookieParser  = cookieParser(config.session.cookie_secret)
+var cookieParser  = cookieParser(GLOBAL.config.session.cookie_secret)
 app.enable("trust proxy")
 app.disable('x-powered-by')
 app.set('port', process.env.PORT || 7000)
